@@ -36,10 +36,10 @@
 
                 <ImageView
                     android:id="@+id/recipe_imageview"
+                    loadImageFromUrl="@{result.image}"
                     android:layout_width="200dp"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
-                    loadImageFromUrl="@{result.image}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -90,10 +90,10 @@
 
                 <TextView
                     android:id="@+id/heart_textview"
+                    setLikes="@{result.aggregateLikes}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100"
-                    setLikes="@{result.aggregateLikes}"
                     android:textAlignment="center"
                     app:layout_constraintStart_toStartOf="@+id/description_textview"
                     app:layout_constraintTop_toBottomOf="@+id/heart_imageview" />
@@ -140,9 +140,6 @@
                     app:layout_constraintTop_toTopOf="@+id/clock_imageview"
                     app:srcCompat="@drawable/ic_leaf" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </com.google.android.material.card.MaterialCardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
