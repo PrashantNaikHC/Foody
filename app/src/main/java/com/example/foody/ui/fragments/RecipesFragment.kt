@@ -11,23 +11,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foody.viewmodels.MainViewModel
 import com.example.foody.R
 import com.example.foody.adapters.RecipeAdapter
 import com.example.foody.databinding.FragmentRecipesBinding
 import com.example.foody.models.FoodRecipe
-import com.example.foody.util.Constants.Companion.API_KEY
 import com.example.foody.util.NetworkResult
 import com.example.foody.util.observeOnce
 import com.example.foody.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_recipes.view.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
     private val TAG: String? = "RecipesFragment"
+
+    private val args by navArgs<RecipesFragmentArgs>()
+
     private var _binding : FragmentRecipesBinding? = null
     private val binding get() = _binding!!
     private lateinit var mMainViewModel: MainViewModel
@@ -50,7 +52,7 @@ class RecipesFragment : Fragment() {
         binding.mainViewModel = mMainViewModel
 
         setupAdapter()
-        readFromDB()
+        readFromDatabase()
 
         binding.recipesFab.setOnClickListener {
             findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
@@ -69,10 +71,12 @@ class RecipesFragment : Fragment() {
         }
     }
 
-    private fun readFromDB() {
+    private fun readFromDatabase() {
         lifecycleScope.launch {
             mMainViewModel.readRecipes.observeOnce(viewLifecycleOwner) { database ->
-                if (database.isNotEmpty()) {
+                // load from the network only if Apply button is clicked
+                // else if it is dismissed, load from the database
+                if (database.isNotEmpty() && !args.backFromBottomSheet) {
                     mAdapter.setData(database[0].foodRecipe)
                     hideShimmer()
                     Log.d(TAG, "Reading from database")
