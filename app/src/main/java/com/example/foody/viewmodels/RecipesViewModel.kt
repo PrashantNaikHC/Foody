@@ -4,6 +4,7 @@ import android.app.Application
 import android.widget.Toast
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.foody.data.DataStoreRepository
 import com.example.foody.util.Constants
@@ -20,26 +21,28 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class RecipesViewModel @ViewModelInject constructor(
-    application : Application,
+    application: Application,
     private val dataStoreRepository: DataStoreRepository
 ) : AndroidViewModel(application) {
 
+    //region saving Meal and Diet type
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
     private var mealType = DEFAULT_MEAL_TYPE
     private var dietType = DEFAULT_DIET_TYPE
-    var networkStatus = false
 
-    fun saveMealAndDietType(mT: String, mTid: Int, dT:String, dTid: Int){
+    fun saveMealAndDietType(mT: String, mTid: Int, dT: String, dTid: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveMealAndDietType(mT, mTid, dT, dTid)
         }
 
     }
+    //endregion
 
+    //region Apply queries
     fun applyQueries(): HashMap<String, String> {
-        var query : HashMap<String, String> = HashMap()
+        var query: HashMap<String, String> = HashMap()
         viewModelScope.launch {
-            readMealAndDietType.collect { value->
+            readMealAndDietType.collect { value ->
                 mealType = value.selectedMealType
                 dietType = value.selectedDietType
             }
@@ -54,10 +57,28 @@ class RecipesViewModel @ViewModelInject constructor(
 
         return query
     }
+    //endregion
 
-    fun showNetworkStatus(){
-        if(!networkStatus){
+    //region Network status listening
+    var networkStatus = false
+    var backOnline = false
+    val readBackOnline = dataStoreRepository.readBackOnline().asLiveData()
+
+    fun saveBackOnline(backOnline: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.saveBackOnline(backOnline)
+        }
+
+    fun showNetworkStatus() {
+        if (!networkStatus) {
             Toast.makeText(getApplication(), "No internet connection", Toast.LENGTH_SHORT).show()
+            saveBackOnline(true)
+        } else {
+            if (backOnline) {
+                Toast.makeText(getApplication(), "We're back online", Toast.LENGTH_SHORT).show()
+                saveBackOnline(false)
+            }
         }
     }
+    //endregion
 }

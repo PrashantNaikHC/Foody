@@ -34,7 +34,7 @@ class RecipesFragment : Fragment() {
 
     private val args by navArgs<RecipesFragmentArgs>()
 
-    private var _binding : FragmentRecipesBinding? = null
+    private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
     private lateinit var mMainViewModel: MainViewModel
     private lateinit var mRecipesViewModel: RecipesViewModel
@@ -57,19 +57,24 @@ class RecipesFragment : Fragment() {
         binding.mainViewModel = mMainViewModel
 
         setupAdapter()
-        readFromDatabase()
+
+        mRecipesViewModel.readBackOnline.observe(viewLifecycleOwner, {
+            mRecipesViewModel.backOnline = it
+        })
+
         lifecycleScope.launch {
             networkListener = NetworkListener()
             networkListener.checkNetworkAvailability(requireContext())
-                .collect { status->
+                .collect { status ->
                     Log.d("NetworkListener", status.toString())
                     mRecipesViewModel.networkStatus = status
                     mRecipesViewModel.showNetworkStatus()
+                    readFromDatabase()
                 }
         }
 
         binding.recipesFab.setOnClickListener {
-            if(mRecipesViewModel.networkStatus){
+            if (mRecipesViewModel.networkStatus) {
                 findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
             } else {
                 mRecipesViewModel.showNetworkStatus()
