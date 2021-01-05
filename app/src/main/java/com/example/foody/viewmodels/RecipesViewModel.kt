@@ -10,11 +10,13 @@ import com.example.foody.data.DataStoreRepository
 import com.example.foody.util.Constants
 import com.example.foody.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.example.foody.util.Constants.Companion.DEFAULT_MEAL_TYPE
+import com.example.foody.util.Constants.Companion.DEFAULT_RECIPES_NUMBER
 import com.example.foody.util.Constants.Companion.QUERY_API_KEY
 import com.example.foody.util.Constants.Companion.QUERY_DIET
 import com.example.foody.util.Constants.Companion.QUERY_FILL_INGREDIENT
 import com.example.foody.util.Constants.Companion.QUERY_NUMBER
 import com.example.foody.util.Constants.Companion.QUERY_RECIPE_INFORMATION
+import com.example.foody.util.Constants.Companion.QUERY_SEARCH
 import com.example.foody.util.Constants.Companion.QUERY_TYPE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -40,7 +42,7 @@ class RecipesViewModel @ViewModelInject constructor(
 
     //region Apply queries
     fun applyQueries(): HashMap<String, String> {
-        var query: HashMap<String, String> = HashMap()
+        val query: HashMap<String, String> = HashMap()
         viewModelScope.launch {
             readMealAndDietType.collect { value ->
                 mealType = value.selectedMealType
@@ -48,10 +50,22 @@ class RecipesViewModel @ViewModelInject constructor(
             }
         }
 
-        query[QUERY_NUMBER] = "50"
+        query[QUERY_NUMBER] = DEFAULT_RECIPES_NUMBER
         query[QUERY_API_KEY] = Constants.API_KEY
         query[QUERY_TYPE] = mealType
         query[QUERY_DIET] = dietType
+        query[QUERY_RECIPE_INFORMATION] = "true"
+        query[QUERY_FILL_INGREDIENT] = "true"
+
+        return query
+    }
+
+    fun applySearchQueries(searchQuery: String): Map<String, String> {
+        val query: HashMap<String, String> = HashMap()
+
+        query[QUERY_NUMBER] = DEFAULT_RECIPES_NUMBER
+        query[QUERY_SEARCH] = searchQuery
+        query[QUERY_API_KEY] = Constants.API_KEY
         query[QUERY_RECIPE_INFORMATION] = "true"
         query[QUERY_FILL_INGREDIENT] = "true"
 
