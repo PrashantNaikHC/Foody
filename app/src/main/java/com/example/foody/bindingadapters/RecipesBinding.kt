@@ -13,6 +13,7 @@ import com.example.foody.models.FoodRecipe
 import com.example.foody.models.Result
 import com.example.foody.ui.fragments.RecipesFragmentDirections
 import com.example.foody.util.NetworkResult
+import org.jsoup.Jsoup
 import java.lang.Exception
 
 class RecipesBinding {
@@ -61,6 +62,15 @@ class RecipesBinding {
                 textView.visibility = INVISIBLE
             } else if (apiResponse is NetworkResult.Success) {
                 textView.visibility = INVISIBLE
+            }
+        }
+
+        @BindingAdapter("parseHtmlText")
+        @JvmStatic
+        fun parseHtml(textView: TextView, string: String?){
+            string.let {
+                val parsedText = Jsoup.parse(it).text()
+                textView.text = parsedText
             }
         }
     }

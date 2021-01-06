@@ -12,6 +12,7 @@ import coil.load
 import com.example.foody.R
 import com.example.foody.models.Result
 import kotlinx.android.synthetic.main.fragment_overview.view.*
+import org.jsoup.Jsoup
 
 
 class OverviewFragment : Fragment() {
@@ -30,7 +31,7 @@ class OverviewFragment : Fragment() {
             overview_title_textview.text = result?.title
             likes_textview.text = result?.aggregateLikes.toString()
             time_textview.text = result?.readyInMinutes.toString()
-            summary_textview.text = result?.summary
+            summary_textview.text = Jsoup.parse(result?.summary).text()
 
             if (result?.vegetarian == true) {
                 markInGreen(vegetarian_imageview, vegetarian_textview)
