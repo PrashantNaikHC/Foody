@@ -23,4 +23,7 @@
     <color name="chipTextColor">@color/darkGray</color>
     
     <color name="actionBarBackgroundColor">@color/colorPrimary</color>
+    <color name="card_background_color">@color/white</color>
+    <color name="strok_color">#727272</color>
+    <color name="ingredient_title">@color/darker</color>
 </resources>

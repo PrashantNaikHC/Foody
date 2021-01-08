@@ -3,9 +3,9 @@ package com.example.foody.util
 import androidx.recyclerview.widget.DiffUtil
 import com.example.foody.models.Result
 
-class RecipeDiffUtil(
-    private val oldList: List<Result>,
-    private val newList: List<Result>
+class RecipeDiffUtil<T>(
+    private val oldList: List<T>,
+    private val newList: List<T>
 ) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         // here we will check the referential equality if it is pointing to the same memory location
@@ -22,7 +22,7 @@ class RecipeDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // here we are checking the structural equality, if both obects are actually same
+        // here we are checking the structural equality, if both objects are actually same
         // Java equivalent of .equals()
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
