@@ -104,7 +104,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="@+id/clock_textview"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/clock_textview"
                     app:layout_constraintTop_toTopOf="@+id/heart_imageview"
                     app:srcCompat="@drawable/ic_clock" />
