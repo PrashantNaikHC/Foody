@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import coil.load
 import com.example.foody.R
 import com.example.foody.models.Result
+import com.example.foody.util.Constants.Companion.RECIPE_BUNDLE_RESULT
 import kotlinx.android.synthetic.main.fragment_overview.view.*
 import org.jsoup.Jsoup
 
@@ -24,7 +25,7 @@ class OverviewFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
 
-        val result: Result? = arguments?.getParcelable("recipeBundle")
+        val result: Result? = arguments?.getParcelable(RECIPE_BUNDLE_RESULT)
 
         view.apply {
             main_imageview.load(result?.image)

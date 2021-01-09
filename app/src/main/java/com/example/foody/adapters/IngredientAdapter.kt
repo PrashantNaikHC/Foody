@@ -25,13 +25,15 @@ class IngredientAdapter : RecyclerView.Adapter<IngredientAdapter.MyViewHolder>()
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val ingredient = ingredientsList[position]
         holder.itemView.apply {
-            ingredient_imageview.load(BASE_IMAGE_URL + ingredient.image)
+            ingredient_imageview.load(BASE_IMAGE_URL + ingredient.image) {
+                crossfade(600)
+                error(R.drawable.ic_image_placeholder)
+            }
             ingredient_name.text = ingredient.name
             ingredient_amount.text = ingredient.amount.toString()
             ingredient_unit.text = ingredient.unit
-            ingredient_unit.ingredient_consistency.text = ingredient.consistency
-            ingredient_unit.ingredient_original.text = ingredient.original
-
+            ingredient_consistency.text = ingredient.consistency
+            ingredient_original.text = ingredient.original
         }
     }
 

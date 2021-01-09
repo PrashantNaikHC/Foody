@@ -12,6 +12,7 @@ import com.example.foody.adapters.PagerAdapter
 import com.example.foody.ui.fragments.ingredients.IngredientsFragment
 import com.example.foody.ui.fragments.instructions.InstructionsFragment
 import com.example.foody.ui.fragments.overview.OverviewFragment
+import com.example.foody.util.Constants.Companion.RECIPE_BUNDLE_RESULT
 import kotlinx.android.synthetic.main.activity_details.*
 
 class DetailsActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class DetailsActivity : AppCompatActivity() {
         fragmentTitleList.add("Instructions")
 
         val resultBundle = Bundle()
-        resultBundle.putParcelable("recipeBundle", args.result)
+        resultBundle.putParcelable(RECIPE_BUNDLE_RESULT, args.result)
 
         val pagerAdapter = PagerAdapter(
             resultBundle, fragmentList, fragmentTitleList, supportFragmentManager
