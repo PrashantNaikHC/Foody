@@ -20,6 +20,7 @@ class Constants {
         // Room database
         const val DATABASE_NAME = "recipes_database"
         const val RECIPES_TABLE = "recipes_table"
+        const val FAVOURITE_RECIPES_TABLE = "favourite_recipes_table"
 
         // Bottomsheet and preferences
         const val DEFAULT_RECIPES_NUMBER = "50"
