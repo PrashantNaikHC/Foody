@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.foody.data.Repository
+import com.example.foody.data.database.entities.FavouritesEntity
 import com.example.foody.data.database.entities.RecipesEntity
 import com.example.foody.models.FoodRecipe
 import com.example.foody.util.NetworkResult
@@ -19,20 +20,35 @@ class MainViewModel @ViewModelInject constructor(
     private val repository: Repository
 ) : AndroidViewModel(application) {
 
-    // Room database
-    val readRecipes : LiveData<List<RecipesEntity>> = repository.local.readDatabase().asLiveData()
+    //region Room database
+    val readRecipes : LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
+    val readFavouriteRecipes : LiveData<List<FavouritesEntity>> = repository.local.readFavouriteRecipe().asLiveData()
 
     private fun insertRecipesToDB(recipesEntity: RecipesEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.local.insertRecipes(recipesEntity)
     }
 
-    // Retrofit
+    private fun insertFavouriteRecipe(favouritesEntity: FavouritesEntity)= viewModelScope.launch(Dispatchers.IO) {
+        repository.local.insertFavouriteRecipes(favouritesEntity)
+    }
+
+    private fun deleteFavouriteRecipe(favouritesEntity: FavouritesEntity)= viewModelScope.launch(Dispatchers.IO) {
+        repository.local.deleteFavouriteRecipe(favouritesEntity)
+    }
+
+    private fun deleteAllFavouriteRecipe()= viewModelScope.launch(Dispatchers.IO) {
+        repository.local.deleteAllFavouriteRecipe()
+    }
+    //endregion
+
+    //region Retrofit
     val recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
     val searchRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
     fun getRecipes(query: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(query)
     }
+    //endregion
 
     fun getSearchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
         getSearchRecipesSafeCall(searchQuery)
