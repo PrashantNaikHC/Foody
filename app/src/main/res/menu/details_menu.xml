@@ -8,6 +8,5 @@
         android:title="@string/save_to_favourites"
         android:icon="@drawable/ic_star"
         app:showAsAction="ifRoom"
-        android:iconTint="@color/white"
         tools:targetApi="o" />
 </menu>
