@@ -1,10 +1,8 @@
 package com.example.foody.ui.fragments
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,14 +10,15 @@ import com.example.foody.R
 import com.example.foody.adapters.FavouriteRecipesAdapter
 import com.example.foody.databinding.FragmentFavoriteRecipesBinding
 import com.example.foody.viewmodels.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_favorite_recipes.view.*
 
 @AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
 
-    val mAdapter: FavouriteRecipesAdapter by lazy { FavouriteRecipesAdapter(requireActivity()) }
     val mainViewModel: MainViewModel by viewModels()
+    val mAdapter: FavouriteRecipesAdapter by lazy { FavouriteRecipesAdapter(requireActivity(), mainViewModel) }
 
     private var _binding : FragmentFavoriteRecipesBinding? = null
     private val binding get() = _binding!!
@@ -27,7 +26,7 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         // val rootView = inflater.inflate(R.layout.fragment_favorite_recipes, container, false)
         // using the binding instead of the view
@@ -35,6 +34,8 @@ class FavoriteRecipesFragment : Fragment() {
 
         // setting the lifecycle owner explicitely
         binding.lifecycleOwner = this
+
+        setHasOptionsMenu(true)
 
         // setting up the binding for the layout elements
         binding.mainViewModel = mainViewModel
@@ -52,6 +53,24 @@ class FavoriteRecipesFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.favourite_recipes_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.delete_all_favourite_recipes_menu){
+            mainViewModel.deleteAllFavouriteRecipe()
+            showSnack("All favourite recipes removed.")
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSnack(text: String) {
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+            .setAction("Okay") {}
+            .show()
+    }
+
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.adapter = mAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -60,5 +79,6 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        mAdapter.clearContextualActionMode()
     }
 }

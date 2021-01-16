@@ -1,6 +1,7 @@
 package com.example.foody.adapters
 
 import android.util.Log
+import android.util.LogPrinter
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -12,18 +13,23 @@ import com.example.foody.data.database.entities.FavouritesEntity
 import com.example.foody.databinding.FavouriteRecipesRowLayoutBinding
 import com.example.foody.ui.fragments.FavoriteRecipesFragmentDirections
 import com.example.foody.util.RecipeDiffUtil
+import com.example.foody.viewmodels.MainViewModel
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.favourite_recipes_row_layout.view.*
 import kotlinx.android.synthetic.main.ingredients_row_layout.view.*
 
 // add the fragmentActivity as the param since contextual action requires it
 class FavouriteRecipesAdapter(
-    private val requireActivity: FragmentActivity
+    private val requireActivity: FragmentActivity,
+    private val mainViewModel: MainViewModel
 ) : RecyclerView.Adapter<FavouriteRecipesAdapter.MyViewHolder>(),
     ActionMode.Callback {
 
     private val TAG: String = "FavouriteRecipesAdapter"
 
-    private lateinit var mActionMode : ActionMode
+    private lateinit var mActionMode: ActionMode
+    private lateinit var rootView: View
 
     private var favouriteRecipes = emptyList<FavouritesEntity>()
     private var selectedRecipes = arrayListOf<FavouritesEntity>()
@@ -56,6 +62,7 @@ class FavouriteRecipesAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        rootView = holder.itemView.rootView
         myViewHolders.add(holder)
         val currentRecipe = favouriteRecipes[position]
         holder.bind(currentRecipe)
@@ -105,6 +112,15 @@ class FavouriteRecipesAdapter(
     }
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.delete_favaourite_recipe_menu) {
+            selectedRecipes.forEach { recipe ->
+                mainViewModel.deleteFavouriteRecipe(recipe)
+            }
+            showSnack("${selectedRecipes.size} recipes removed")
+            multiSelection = false
+            selectedRecipes.clear()
+            mode?.finish()
+        }
         return true
     }
 
@@ -141,8 +157,8 @@ class FavouriteRecipesAdapter(
         applyActionModeTitle()
     }
 
-    private fun applyActionModeTitle(){
-        when(selectedRecipes.size) {
+    private fun applyActionModeTitle() {
+        when (selectedRecipes.size) {
             0 -> mActionMode.finish()
             1 -> mActionMode.title = "${selectedRecipes.size} item selected"
             else -> mActionMode.title = "${selectedRecipes.size} items selected"
@@ -155,6 +171,18 @@ class FavouriteRecipesAdapter(
         )
         holder.itemView.favourite_row_cardview.strokeColor =
             ContextCompat.getColor(requireActivity, strokeColor)
+    }
+
+    private fun showSnack(text: String) {
+        Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT)
+            .setAction("Okay") {}
+            .show()
+    }
+
+    fun clearContextualActionMode(){
+        if(this::mActionMode.isInitialized){
+            mActionMode.finish()
+        }
     }
 
 }

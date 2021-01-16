@@ -36,7 +36,7 @@ class MainViewModel @ViewModelInject constructor(
         repository.local.deleteFavouriteRecipe(favouritesEntity)
     }
 
-    private fun deleteAllFavouriteRecipe()= viewModelScope.launch(Dispatchers.IO) {
+    fun deleteAllFavouriteRecipe()= viewModelScope.launch(Dispatchers.IO) {
         repository.local.deleteAllFavouriteRecipe()
     }
     //endregion
@@ -92,7 +92,7 @@ class MainViewModel @ViewModelInject constructor(
         insertRecipesToDB(recipesEntity)
     }
 
-    private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe>? {
+    private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
         when {
             response.message().toString().contains("timeout") -> {
                 return NetworkResult.Error("Timeout")
