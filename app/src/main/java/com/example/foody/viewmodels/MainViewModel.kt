@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import com.example.foody.data.Repository
 import com.example.foody.data.database.entities.FavouritesEntity
 import com.example.foody.data.database.entities.RecipesEntity
+import com.example.foody.models.FoodJoke
 import com.example.foody.models.FoodRecipe
 import com.example.foody.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
@@ -44,16 +45,26 @@ class MainViewModel @ViewModelInject constructor(
     //region Retrofit
     val recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
     val searchRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
+    val foodJokeResponse: MutableLiveData<NetworkResult<FoodJoke>> = MutableLiveData()
 
     fun getRecipes(query: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(query)
     }
-    //endregion
 
     fun getSearchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
         getSearchRecipesSafeCall(searchQuery)
     }
 
+    fun getFoodJoke(apiKey: String) = viewModelScope.launch {
+        getFoodJokeSafeCall(apiKey)
+    }
+    //endregion
+
+    /**
+     * Safe call methods:
+     * add the caching mechanism if there is any here
+     */
+    //region safe network calls
     private suspend fun getRecipesSafeCall(query: Map<String, String>) {
         recipesResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
@@ -87,11 +98,30 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
+    private suspend fun getFoodJokeSafeCall(apiKey: String) {
+        foodJokeResponse.value = NetworkResult.Loading()
+        if(hasInternetConnection()){
+            try {
+                val response = repository.remote.getFoodJoke(apiKey)
+                foodJokeResponse.value = handleFoodJokeResponse(response)
+            } catch (e: Exception) {
+                foodJokeResponse.value = NetworkResult.Error("Food joke not found")
+            }
+        } else {
+            foodJokeResponse.value = NetworkResult.Error("No internet connection")
+        }
+    }
+    //endregion
+
     private fun offlineCacheRecipes(foodRecipe: FoodRecipe) {
         val recipesEntity = RecipesEntity(foodRecipe)
         insertRecipesToDB(recipesEntity)
     }
-
+    /**
+     * handle network call methods:
+     * Returns the NetworkResult from the response
+     */
+    //region handle network responses from safe call
     private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
         when {
             response.message().toString().contains("timeout") -> {
@@ -110,6 +140,23 @@ class MainViewModel @ViewModelInject constructor(
             else -> return NetworkResult.Error(response.message())
         }
     }
+
+    private fun handleFoodJokeResponse(response: Response<FoodJoke>) : NetworkResult<FoodJoke> {
+        return when {
+            response.message().toString().contains("timeout") -> {
+                NetworkResult.Error("Timeout")
+            }
+            response.code() == 402 -> {
+                NetworkResult.Error("API key is limited")
+            }
+            response.isSuccessful -> {
+                val foodJoke = response.body()
+                NetworkResult.Success(foodJoke!!)
+            }
+            else -> NetworkResult.Error(response.message())
+        }
+    }
+    //endregion
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<Application>().getSystemService(
