@@ -33,4 +33,5 @@
     <string name="search">Search</string>
     <string name="save_to_favourites">Save to favourites</string>
     <string name="no_favourite_recipes">No favourite Recipes.</string>
+    <string name="delete_favourite_menu">Delete Favourite Menu</string>
 </resources>

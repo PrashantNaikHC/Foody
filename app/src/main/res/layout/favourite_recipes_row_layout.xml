@@ -12,7 +12,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/favouriteRecipesRowLayout"
@@ -25,9 +27,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/favourite_row_cardview"
                 android:layout_width="0dp"
                 android:layout_height="250dp"
-                android:layout_marginTop="8dp"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +80,7 @@
                         android:layout_marginTop="6dp"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:text="@{favouritesEntity.result.summary}"
+                        app:parseHtmlText="@{favouritesEntity.result.summary}"
                         android:textColor="@color/darkGray"
                         app:layout_constraintEnd_toEndOf="@+id/favourite_title_textview"
                         app:layout_constraintStart_toStartOf="@+id/favourite_title_textview"

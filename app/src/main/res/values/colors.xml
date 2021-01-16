@@ -24,6 +24,11 @@
     
     <color name="actionBarBackgroundColor">@color/colorPrimary</color>
     <color name="card_background_color">@color/white</color>
-    <color name="strok_color">#727272</color>
+    <color name="stroke_color">@color/lightMediumGray</color>
     <color name="ingredient_title">@color/darker</color>
+
+    <color name="statusBarColor">@color/colorPrimaryDark</color>
+    <color name="contextualStatusBarColor">@color/darker</color>
+    <color name="contextualActionBarColor">@color/dark</color>
+    <color name="card_background_light_color">#106200EA</color>
 </resources>

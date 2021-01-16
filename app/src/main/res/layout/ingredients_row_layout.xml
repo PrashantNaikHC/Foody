@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
 
         app:cardCornerRadius="10dp"
-        app:strokeColor="@color/strok_color"
+        app:strokeColor="@color/stroke_color"
         app:strokeWidth="1dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
