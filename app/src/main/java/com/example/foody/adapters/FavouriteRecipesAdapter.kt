@@ -23,6 +23,8 @@ class FavouriteRecipesAdapter(
 
     private val TAG: String = "FavouriteRecipesAdapter"
 
+    private lateinit var mActionMode : ActionMode
+
     private var favouriteRecipes = emptyList<FavouritesEntity>()
     private var selectedRecipes = arrayListOf<FavouritesEntity>()
     private var myViewHolders = arrayListOf<MyViewHolder>()
@@ -90,10 +92,11 @@ class FavouriteRecipesAdapter(
         return favouriteRecipes.size
     }
 
+    //region Contextual Action Mode
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
         mode?.menuInflater?.inflate(R.menu.favourites_contextual_menu, menu)
+        mActionMode = mode!!
         setStatusBarColor(R.color.contextualStatusBarColor)
-
         return true
     }
 
@@ -113,6 +116,7 @@ class FavouriteRecipesAdapter(
         selectedRecipes.clear()
         setStatusBarColor(R.color.statusBarColor)
     }
+    //endregion
 
     fun setData(newList: List<FavouritesEntity>) {
         val recipesDiffUtil = RecipeDiffUtil(favouriteRecipes, newList)
@@ -133,6 +137,15 @@ class FavouriteRecipesAdapter(
             selectedRecipes.add(currentRecipe)
             Log.d(TAG, "applySelection: ")
             changeRecipeStyle(holder, R.color.card_background_light_color, R.color.colorPrimary)
+        }
+        applyActionModeTitle()
+    }
+
+    private fun applyActionModeTitle(){
+        when(selectedRecipes.size) {
+            0 -> mActionMode.finish()
+            1 -> mActionMode.title = "${selectedRecipes.size} item selected"
+            else -> mActionMode.title = "${selectedRecipes.size} items selected"
         }
     }
 
