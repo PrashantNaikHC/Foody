@@ -3,6 +3,7 @@ package com.example.foody.bindingadapters
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.foody.data.database.entities.FoodJokeEntity
 import com.example.foody.models.FoodJoke
@@ -49,6 +50,26 @@ class FoodJokeBinding {
                         is MaterialCardView -> view.visibility = View.VISIBLE
                     }
                 }
+            }
+        }
+
+        @BindingAdapter("readApiResponse4", "readDatabase4", requireAll = true)
+        @JvmStatic
+        fun setErrorviewsVisibility(
+            view: View,
+            apiResponse: NetworkResult<FoodJoke>?,
+            database: List<FoodJokeEntity>?
+        ){
+            if(database != null) {
+                if(database.isEmpty()) {
+                    view.visibility = View.VISIBLE
+                    if(view is TextView) {
+                        if(apiResponse != null) view.text = apiResponse.message.toString()
+                    }
+                }
+            }
+            if(apiResponse is NetworkResult.Success){
+                view.visibility = View.INVISIBLE
             }
         }
     }
