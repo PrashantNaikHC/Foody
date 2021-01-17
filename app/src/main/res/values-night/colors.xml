@@ -32,8 +32,8 @@
     <color name="desciption_color">@color/mediumGray</color>
 
     <color name="statusBarColor">@color/black</color>
-    <color name="contextualStatusBarColor">@color/darker</color>
-    <color name="contextualActionBarColor">@color/dark</color>
+    <color name="contextualStatusBarColor">@color/black</color>
+    <color name="contextualActionBarColor">@color/darker</color>
     <color name="card_background_light_color">#106200EA</color>
     <color name="actionBarBackgroundColor">@color/darker</color>
 
