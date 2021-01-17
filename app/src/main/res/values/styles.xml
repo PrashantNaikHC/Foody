@@ -35,7 +35,7 @@
 
         <!-- Customize the color of the action and status bar. -->
         <item name="colorControlNormal">@color/white</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
     </style>
 
     <style name="CustomTabLayoutStyle" parent="Widget.Design.TabLayout">

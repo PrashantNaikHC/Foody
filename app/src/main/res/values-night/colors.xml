@@ -18,6 +18,7 @@
 
     <color name="backgroundColor">@color/dark</color>
     <color name="placeholderColor">@color/darker</color>
+    <color name="itemColor">@color/mediumGray</color>
 
     // custom chip style
     <color name="checkedChipBackgroundColor">@color/dark</color>

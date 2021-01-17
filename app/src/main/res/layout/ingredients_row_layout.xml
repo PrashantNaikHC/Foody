@@ -32,6 +32,7 @@
                 android:id="@+id/white_background"
                 android:layout_width="120dp"
                 android:layout_height="0dp"
+                android:background="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +58,7 @@
                 android:fontFamily="@font/courgette"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/ingredient_title"
+                android:textColor="@color/title_color"
                 tools:text="Ingredient"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/white_background"
