@@ -1,11 +1,10 @@
 package com.example.foody.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +24,7 @@ class FoodJokeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val TAG = "FoodJokeFragment"
+    private var foodJoke = "No food joke"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,11 +35,16 @@ class FoodJokeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.mainViewModel = mainViewModel
 
+        setHasOptionsMenu(true)
+
         mainViewModel.getFoodJoke(API_KEY)
         mainViewModel.foodJokeResponse.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     binding.foodJokeTextview.text = response.data?.text
+                    if(response.data != null){
+                        foodJoke = response.data.text
+                    }
                 }
                 is NetworkResult.Error -> {
                     Log.d(TAG, "onCreateView: Network.Error")
@@ -63,7 +68,8 @@ class FoodJokeFragment : Fragment() {
         lifecycleScope.launch {
             mainViewModel.readFoodJoke.observe(viewLifecycleOwner, { database ->
                 if (!database.isNullOrEmpty()) {
-                    binding.foodJokeTextview.setText(database[0].foodJoke.text)
+                    binding.foodJokeTextview.text = database[0].foodJoke.text
+                    foodJoke = database[0].foodJoke.text
                 }
             })
         }
@@ -72,5 +78,21 @@ class FoodJokeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.food_joke_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.share_food_joke_menu) {
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, foodJoke)
+            }
+            startActivity(shareIntent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
