@@ -17,6 +17,7 @@
     <color name="green">#00C980</color>
 
     <color name="backgroundColor">@color/dark</color>
+    <color name="placeholderColor">@color/darker</color>
 
     // custom chip style
     <color name="checkedChipBackgroundColor">@color/dark</color>
